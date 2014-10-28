@@ -1,0 +1,10 @@
+C:\Telfort\MyTools\MiniCASE\MiniCASE\bin\Debug\MiniCASE.exe
+C:\Telfort\MyTools\MiniCASE\MiniCASE\bin\Debug\MiniCASE.pdb
+C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\ResolveAssemblyReference.cache
+C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.CaseDiagramView.resources
+C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.MainForm.resources
+C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.Properties.Resources.resources
+C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.csproj.GenerateResource.Cache
+C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.exe
+C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.pdb
+C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.CaseToolboxView.resources
