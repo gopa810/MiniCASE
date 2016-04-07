@@ -81,13 +81,13 @@ namespace MiniCASE
                 InitializeShapes();
             }
 
-            if (!shapes.ContainsKey(shape.ShapeType))
+            if (!shapes.ContainsKey(shape.ShapeReference))
             {
                 DrawDefaultShape(g, shape, offset);
             }
             else
             {
-                ShapeDefinition def = shapes[shape.ShapeType];
+                ShapeDefinition def = shapes[shape.ShapeReference];
 
                 if (def == null)
                 {
@@ -240,7 +240,7 @@ namespace MiniCASE
             foreach (string shape in shapes.Keys)
             {
                 retval[i] = new CaseShape();
-                retval[i].ShapeType = shape;
+                retval[i].ShapeReference = shape;
                 i++;
             }
             return retval;

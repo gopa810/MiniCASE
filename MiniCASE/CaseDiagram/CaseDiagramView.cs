@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -38,8 +39,8 @@ namespace MiniCASE
         public CaseDiagram diagram = null;
         public Point offset = new Point(0,0);
         public double scale = 1.0;
-        public DiagramDrawMatrix matrix = new DiagramDrawMatrix();
-        public ConnectionsMode ConnectionDrawMode = ConnectionsMode.Straight;
+        //public DiagramDrawMatrix matrix = new DiagramDrawMatrix();
+        public ConnectionsMode ConnectionDrawMode = ConnectionsMode.Path;
 
         // tracking values
         private CaseShape lastMouseOverShape = null;
@@ -73,16 +74,22 @@ namespace MiniCASE
             diagram.AddShape(cs);
 
             CaseShape cs2 = new CaseShape();
-            cs2.Bounds = new RectangleD(150, 150, 240, 200);
+            cs2.ShapeBase = ShapeBase.Rectangle;
+            cs2.Bounds = new RectangleD(150, 200, 230, 250);
             diagram.AddShape(cs2);
 
             CaseShape cs3 = new CaseShape();
-            cs3.Bounds = new RectangleD(50, 90, 140, 140);
+            cs3.Bounds = new RectangleD(250, 90, 340, 140);
             diagram.AddShape(cs3);
 
-            diagram.AddConnection(cs.id, cs2.id, 0);
-            diagram.AddConnection(cs.id, cs3.id, 0);
-            diagram.AddConnection(cs2.id, cs.id, 0);
+            CaseShape cs4 = new CaseShape();
+            cs4.Bounds = new RectangleD(20, 250, 220, 340);
+            diagram.AddShape(cs4);
+
+            //diagram.AddConnection(cs.id, cs2.id, 0);
+            CaseDiagramConnection conn = diagram.AddConnection(cs.id, cs3.id);
+            conn.EndCap = 2;
+            //diagram.AddConnection(cs2.id, cs3.id, 0);
 
             // ------------------------------------------
             // init of drawing helpers
@@ -95,6 +102,12 @@ namespace MiniCASE
             DrawToBuffer(grafx.Graphics);
 
             this.ClientSize = new Size(2000, 2000);
+
+            cs2.ShapeBase = ShapeBase.Pico;
+            Point tp = cs2.GetBorderPoint(110, 170);
+            tp = cs2.GetBorderPoint(270, 170);
+            tp = cs2.GetBorderPoint(270, 270);
+            tp = cs2.GetBorderPoint(110, 270);
         }
 
         private void CaseDiagramView_Paint(object sender, PaintEventArgs e)
@@ -161,9 +174,7 @@ namespace MiniCASE
         private void DrawDiagramToBuffer(Graphics g)
         {
             lastSelectedConnection = null;
-            //
-            // drawing connections
-            //
+
             foreach (CaseDiagramConnection conn in diagram.ConnArray)
             {
                 if (!conn.validCoordinates)
@@ -173,24 +184,7 @@ namespace MiniCASE
 
                 if (conn.validCoordinates)
                 {
-                    Point p1;
-                    Point p2 = new Point(0, 0);
-                    int count = 0;
-                    Pen pen = conn.selected ? Pens.DarkGreen : Pens.Black;
-                    foreach (Point p in conn.coordinates)
-                    {
-                        if (count == 0)
-                        {
-                            p2 = p;
-                        }
-                        else
-                        {
-                            p1 = p2;
-                            p2 = p;
-                            g.DrawLine(pen, p1.X + offset.X, p1.Y + offset.Y, p2.X + offset.X, p2.Y + offset.Y);
-                        }
-                        count++;
-                    }
+                    conn.DrawConnection(g, offset);
                 }
 
                 if (conn.selected)
@@ -205,7 +199,8 @@ namespace MiniCASE
                 ShapesLibrary.DrawShape(g, shape, offset);
             }
 
-            if (mouseMode == MouseMoveMode.ConnectionMake || mouseMode == MouseMoveMode.ReconnectStartPoint
+            if (mouseMode == MouseMoveMode.ConnectionMake 
+                || mouseMode == MouseMoveMode.ReconnectStartPoint
                 || mouseMode == MouseMoveMode.ReconnectEndPoint)
             {
                 g.DrawLine(Pens.Red, mouseLogicalConnStart.X + offset.X, mouseLogicalConnStart.Y + offset.Y,
@@ -227,6 +222,133 @@ namespace MiniCASE
 
         }
 
+        public class Electron
+        {
+            public double X;
+            public double Y;
+
+            public double dx;
+            public double dy;
+
+            public double dxop;
+            public double dyop;
+
+            public void ClearPower()
+            {
+                //dx = 0;
+                //dy = 0;
+                dxop = 0;
+                dyop = 0;
+            }
+
+            public Point Point
+            {
+                get
+                {
+                    return new Point(Convert.ToInt32(X), Convert.ToInt32(Y));
+                }
+                set
+                {
+                    X = value.X;
+                    Y = value.Y;
+                }
+            }
+
+            /// <summary>
+            /// Set target shape for this line
+            /// </summary>
+            /// <param name="sh"></param>
+            public void AddTarget(CaseShape sh)
+            {
+                Point pt = sh.Bounds.CenterPoint;
+                double diffx = pt.X - X;
+                double diffy = pt.Y - Y;
+                SetVectorLength(ref diffx, ref diffy, 1);
+                dx = diffx;
+                dy = diffy;
+            }
+
+            /// <summary>
+            /// Add vector of opposing power from the opponent shape
+            /// </summary>
+            /// <param name="sh">Opponent shape</param>
+            public void AddOpponent(CaseShape sh)
+            {
+                Point pt = sh.Bounds.CenterPoint;
+                double A = dx;
+                double B = dy;
+                double x1 = X;
+                double y1 = Y;
+                double x2 = pt.X;
+                double y2 = pt.Y;
+
+                double w = (B * (x2 - x1) - A * (y2 - y1)) / (A * A + B * B);
+                double v = (y2 - y1 + A * w) / B;
+
+                // X3,Y3 is the point on the line between source and target object
+                // which is nearest to the oponent object sh
+                double x3 = x1 + A * v;
+                double y3 = y1 + B * v;
+
+                double V = GetSquareRoot(x3 - x2, y3 - y2);
+                double R = GetSquareRoot(sh.Bounds.Width / 2, sh.Bounds.Height / 2) * 1.3;
+                double S = GetSquareRoot(x3 - X, y3 - Y);
+
+                // omega is strength of oposing power in the X3,Y3 point
+                // <0, R)
+                double omega = R - V;
+
+                if (omega <= 0.0)
+                    return;
+
+                double sigma = 2 * omega;
+
+                if (S > sigma || sigma < 0.1)
+                    return;
+
+                double mag = (Math.Cos(Math.PI / sigma * S) + 1) / 2 * omega;
+
+                double diffx = x3 - x2;
+                double diffy = y3 - y2;
+
+                SetVectorLength(ref diffx, ref diffy, mag);
+
+                dxop += diffx;
+                dyop += diffy;
+            }
+            
+            private void SetVectorLength(ref double ddx, ref double ddy, double length)
+            {
+                double d = GetSquareRoot(ddx, ddy);
+                if (d != 0.0)
+                {
+                    ddx = ddx / d * length;
+                    ddy = ddy / d * length;
+                }
+            }
+
+            private double GetSquareRoot(double a, double b)
+            {
+                return Math.Sqrt(a * a + b * b);
+            }
+
+            public double DistanceFrom(Point point)
+            {
+                return GetSquareRoot(point.X - X, point.Y - Y);
+            }
+
+            public void Resolve(int i, int count)
+            {
+                double ret = (i < 5 ? i * 0.2 : 1.0) * (i >= count - 5 ? (count - i) * 0.2 : 1.0);
+
+                dxop *= ret;
+                dyop *= ret;
+
+                X += dxop;
+                Y += dyop;
+            }
+        }
+
         private void CalculateConnectionsCoordinates()
         {
             if (ConnectionDrawMode == ConnectionsMode.Straight)
@@ -246,67 +368,66 @@ namespace MiniCASE
             }
             else if (ConnectionDrawMode == ConnectionsMode.Path)
             {
-                matrix.InitStart();
-                // dividing axis' to ranges
-                foreach (CaseShape shape in diagram.ShapeArray)
-                {
-                    matrix.InsertHorizontalDivider(shape.Bounds.Xa);
-                    matrix.InsertHorizontalDivider(shape.Bounds.Xb);
-                    matrix.InsertVerticalDivider(shape.Bounds.Ya);
-                    matrix.InsertVerticalDivider(shape.Bounds.Yb);
-                }
-
-                //matrix.LogRanges();
-
-                // creating matrix of areas
-                matrix.CreateMatrix();
-
-                // assigning matrix areas to shapes
-                foreach (CaseShape shape in diagram.ShapeArray)
-                {
-                    int r1, r2;
-                    int c1, c2;
-                    matrix.GetIndicesForRange(matrix.hRanges, shape.Bounds.Xa, shape.Bounds.Xb, out c1, out c2);
-                    matrix.GetIndicesForRange(matrix.vRanges, shape.Bounds.Ya, shape.Bounds.Yb, out r1, out r2);
-
-                    shape.matrixAreas.Clear();
-                    for (int c = c1; c <= c2 && c >= 0; c++)
-                    {
-                        for (int r = r1; r <= r2 && r >= 0; r++)
-                        {
-                            matrix.aMatrix[c, r].shape = shape;
-                            shape.matrixAreas.Add(new Point(c, r));
-                        }
-                    }
-                }
-
-                //matrix.LogAreas();
+                Rectangle rc = diagram.DiagramRect;
 
                 // finding paths for connections
                 foreach (CaseDiagramConnection conn in diagram.ConnArray)
                 {
-                    conn.path = matrix.FindPath(conn.startId, conn.endId);
-                }
+                    CaseShape ss = diagram.FindShape(conn.startId);
+                    CaseShape es = diagram.FindShape(conn.endId);
 
-                // allocation of slots for lines
-                matrix.ClearSlots();
-                foreach (CaseDiagramConnection conn in diagram.ConnArray)
-                {
-                    matrix.AllocateSlots(conn.path.areaPath, conn);
-                }
+                    List<Point> lp = CalculateConnectionPoints(ss, es);
 
-
-                matrix.RecalculateSlotsPositions();
-
-                //matrix.LogSlots();
-
-                foreach (CaseDiagramConnection conn in diagram.ConnArray)
-                {
-                    matrix.CalculatePoints(conn);
+                    conn.coordinates = lp.ToArray<Point>();
+                    conn.validCoordinates = true;
                 }
             }
         }
 
+        private List<Point> CalculateConnectionPoints(CaseShape ss, CaseShape es)
+        {
+            Point p1 = ss.Bounds.CenterPoint;
+            Point p2 = es.Bounds.CenterPoint;
+            double length = CaseShape.GetDistance(p1, p2);
+            int count = Convert.ToInt32(length / 4);
+            double dx = Convert.ToDouble(p2.X - p1.X) / count;
+            double dy = Convert.ToDouble(p2.Y - p1.Y) / count;
+
+            List<Point> lp = new List<Point>();
+            Electron e = new Electron();
+            e.Point = p1;
+            e.AddTarget(es);
+
+            //Debugger.Log(0, "", "-- line --\n");
+            for (int i = 0; i < count; i++)
+            {
+                e.X = p1.X + i * dx;
+                e.Y = p1.Y + i * dy;
+                e.ClearPower();
+                foreach (CaseShape sh in diagram.ShapeArray)
+                {
+                    if (sh.id != ss.id && sh.id != es.id)
+                    {
+                        e.AddOpponent(sh);
+                    }
+                }
+                e.Resolve(i, count);
+                Point np = e.Point;
+                if (lp.Count > 0)
+                {
+                    if (!es.ContainsPoint(np))
+                        lp.Add(np);
+                    else
+                        break;
+                }
+                else if (!ss.ContainsPoint(np))
+                {
+                    lp.Add(np);
+                }
+                //lp.Add(e.Point);
+            }
+            return lp;
+        }
 
         private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
@@ -332,7 +453,7 @@ namespace MiniCASE
                     diagram.ClearHighlight();
                     if (lastSelectedShape != null)
                         lastSelectedShape.Highlighted = true;
-                    CaseShape shape = matrix.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
+                    CaseShape shape = diagram.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
                     if (shape != null)
                         shape.Highlighted = true;
                     mouseLogicalConnEnd.X = e.X - offset.X;
@@ -359,7 +480,7 @@ namespace MiniCASE
                         CaseShape startShape = diagram.FindShape(lastSelectedConnection.endId);
                         if (startShape != null)
                             startShape.Highlighted = true;
-                        CaseShape shape = matrix.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
+                        CaseShape shape = diagram.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
                         if (shape != null)
                             shape.Highlighted = true;
                         mouseLogicalConnEnd.X = e.X - offset.X;
@@ -372,7 +493,7 @@ namespace MiniCASE
                     CaseShape startShape = diagram.FindShape(lastSelectedConnection.startId);
                     if (startShape != null)
                         startShape.Highlighted = true;
-                    CaseShape shape = matrix.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
+                    CaseShape shape = diagram.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
                     if (shape != null)
                         shape.Highlighted = true;
                     mouseLogicalConnEnd.X = e.X - offset.X;
@@ -385,7 +506,7 @@ namespace MiniCASE
                 cursorToSet = Cursors.Arrow;
                 bool anchorStart;
                 Point pt;
-                CaseShape shape = matrix.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
+                CaseShape shape = diagram.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
                 if (shape != lastMouseOverShape)
                 {
                     if (shape != null)
@@ -403,7 +524,7 @@ namespace MiniCASE
 
                 if (shape == null)
                 {
-                    CaseDiagramConnection conn = matrix.GetConnectionAtPoint(e.X - offset.X, e.Y - offset.Y);
+                    CaseDiagramConnection conn = diagram.GetConnectionAtPoint(e.X - offset.X, e.Y - offset.Y);
                     if (conn != null)
                     {
                         Debugger.Log(0, "", string.Format("Found connection: {0} -> {1}\n", conn.startId, conn.endId));
@@ -490,17 +611,18 @@ namespace MiniCASE
                 }
                 else if (mouseMode == MouseMoveMode.ConnectionMake)
                 {
-                    CaseShape shape = matrix.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
+                    CaseShape shape = diagram.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
 
                     if (shape != null && lastSelectedShape != null)
                     {
-                        diagram.AddConnection(lastSelectedShape.id, shape.id, 0);
+                        CaseDiagramConnection conn = diagram.AddConnection(lastSelectedShape.id, shape.id);
+                        conn.EndCap = 2;
                     }
                     diagram.ClearHighlight();
                 }
                 else if (mouseMode == MouseMoveMode.ReconnectStartPoint)
                 {
-                    CaseShape shape = matrix.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
+                    CaseShape shape = diagram.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
 
                     if (lastSelectedConnection != null && shape != null)
                     {
@@ -515,7 +637,7 @@ namespace MiniCASE
                 }
                 else if (mouseMode == MouseMoveMode.ReconnectEndPoint)
                 {
-                    CaseShape shape = matrix.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
+                    CaseShape shape = diagram.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
 
                     if (lastSelectedConnection != null && shape != null)
                     {
@@ -575,7 +697,7 @@ namespace MiniCASE
             }
             else if (diagram != null)
             {
-                CaseShape shape = matrix.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
+                CaseShape shape = diagram.GetShapeAtPoint(e.X - offset.X, e.Y - offset.Y);
                 lastSelectedShape = shape;
 
                 if (shape == null)
@@ -585,7 +707,7 @@ namespace MiniCASE
                         diagram.ClearSelection();
                     }
 
-                    CaseDiagramConnection conn = matrix.GetConnectionAtPoint(e.X - offset.X, e.Y - offset.Y);
+                    CaseDiagramConnection conn = diagram.GetConnectionAtPoint(e.X - offset.X, e.Y - offset.Y);
                     if (conn != null)
                     {
                         diagram.ClearSelection();
@@ -664,7 +786,7 @@ namespace MiniCASE
                 if (str.StartsWith("MiniCase.Shape."))
                 {
                     CaseShape cs2 = new CaseShape();
-                    cs2.ShapeType = str;
+                    cs2.ShapeReference = str;
                     Point screenPoint = new Point(e.X, e.Y);
                     Point viewPoint = this.PointToClient(screenPoint);
                     cs2.Bounds = new RectangleD(viewPoint.X - 50, viewPoint.Y - 30, viewPoint.X + 50, viewPoint.Y + 30);

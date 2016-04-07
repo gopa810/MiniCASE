@@ -8,3 +8,13 @@ C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.csproj.GenerateResource.
 C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.exe
 C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.pdb
 C:\Telfort\MyTools\MiniCASE\MiniCASE\obj\Debug\MiniCASE.CaseToolboxView.resources
+C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE\bin\Debug\MiniCASE.exe
+C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE\bin\Debug\MiniCASE.pdb
+C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE\obj\Debug\MiniCASE.CaseDiagramView.resources
+C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE\obj\Debug\MiniCASE.CaseToolboxView.resources
+C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE\obj\Debug\MiniCASE.MainForm.resources
+C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE\obj\Debug\MiniCASE.Properties.Resources.resources
+C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE\obj\Debug\MiniCASE.csproj.GenerateResource.Cache
+C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE\obj\Debug\MiniCASE.exe
+C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE\obj\Debug\MiniCASE.pdb
+C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE\obj\Debug\MiniCASE.csprojResolveAssemblyReference.cache

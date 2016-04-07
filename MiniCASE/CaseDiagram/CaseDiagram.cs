@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace MiniCASE
 {
@@ -15,8 +16,8 @@ namespace MiniCASE
     {
         public int DiagramId = 0;
         private int selectedCount = 0;
-        public ArrayList ShapeArray = new ArrayList();
-        public ArrayList ConnArray = new ArrayList();
+        public List<CaseShape> ShapeArray = new List<CaseShape>();
+        public List<CaseDiagramConnection> ConnArray = new List<CaseDiagramConnection>();
 
         public Rectangle DiagramRect
         {
@@ -34,6 +35,7 @@ namespace MiniCASE
                     else
                     {
                         rect.Set(shape.Bounds);
+                        inits = true;
                     }
 
                 }
@@ -80,16 +82,17 @@ namespace MiniCASE
             return null;
         }
 
-        public void AddConnection(int aStartId, int anEndId, int type)
+        public CaseDiagramConnection AddConnection(int aStartId, int anEndId)
         {
             CaseDiagramConnection conn = new CaseDiagramConnection();
 
             conn.startId = aStartId;
             conn.endId = anEndId;
-            conn.type = type;
             conn.validCoordinates = false;
 
             ConnArray.Add(conn);
+
+            return conn;
         }
 
         public void ClearSelection()
@@ -141,7 +144,7 @@ namespace MiniCASE
 
         public void DeleteSelection()
         {
-            ArrayList arr = new ArrayList();
+            List<CaseShape> arr = new List<CaseShape>();
 
             foreach (CaseShape shape in ShapeArray)
             {
@@ -158,22 +161,22 @@ namespace MiniCASE
             ShapeArray.Clear();
             ShapeArray.AddRange(arr);
 
-            arr = new ArrayList();
+            List<CaseDiagramConnection> arrc = new List<CaseDiagramConnection>();
             foreach (CaseDiagramConnection conn in ConnArray)
             {
                 conn.validCoordinates = false;
                 if (!conn.selected)
                 {
-                    arr.Add(conn);
+                    arrc.Add(conn);
                 }
             }
             ConnArray.Clear();
-            ConnArray.AddRange(arr);
+            ConnArray.AddRange(arrc);
         }
 
         public void DeleteConnectionsStartingIn(int shapeId)
         {
-            ArrayList arr = new ArrayList();
+            List<CaseDiagramConnection> arr = new List<CaseDiagramConnection>();
             foreach (CaseDiagramConnection conn in ConnArray)
             {
                 if (conn.startId != shapeId && conn.endId != shapeId)
@@ -198,6 +201,22 @@ namespace MiniCASE
                     }
                 }
             }
+        }
+
+        public CaseShape GetShapeAtPoint(int px, int py)
+        {
+            foreach (CaseShape sh in ShapeArray)
+            {
+                if (sh.Bounds.ContainsPoint(px, py))
+                    return sh;
+            }
+
+            return null;
+        }
+
+        public CaseDiagramConnection GetConnectionAtPoint(int px, int py)
+        {
+            return null;
         }
     }
 

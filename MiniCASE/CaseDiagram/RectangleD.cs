@@ -103,5 +103,10 @@ namespace MiniCASE
                 Yb = Ya + value;
             }
         }
+
+        public bool ContainsPoint(int px, int py)
+        {
+            return ((Xa <= px) && (Xb >= px) && (Ya <= py) && (Yb >= py)) ;
+        }
     }
 }

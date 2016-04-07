@@ -205,333 +205,213 @@ namespace MiniCASE
         public int aMatrixRows = 0;
         public int aMatrixCols = 0;
 
-        public void InitStart()
+        //
+        // new fields
+        //
+        public int freeSpaceAround = 64;
+        public RectangleD rectangleOfMatrix;
+        public double[,] mainField = null;
+        public double[,] subField = null;
+        public bool[,] visitedField = null;
+        public int fieldWidth = 0;
+        public int fieldHeight = 0;
+        public int gridStep = 4;
+
+        public void InitStart(Rectangle rc)
         {
+            // calculates bigger rectangle aligned to 4points
+            RectangleD rd = new RectangleD();
+            rd.Xa = (rc.Left / gridStep) * gridStep;
+            rd.Xb = (rc.Right / gridStep) * gridStep + gridStep;
+            rd.Ya = (rc.Top / gridStep) * gridStep;
+            rd.Yb = (rc.Bottom / gridStep) * gridStep + gridStep;
+
+            // calculates bigger with some space around
+            rd.Xa -= freeSpaceAround;
+            rd.Xb += freeSpaceAround;
+            rd.Ya -= freeSpaceAround;
+            rd.Yb += freeSpaceAround;
+
+            // calculates conversion constants
+            // logical matrix should start at indexes 0,0
+            rectangleOfMatrix = rd;
+
+            int mw = rd.Width / gridStep;
+            int mh = rd.Height / gridStep;
+
+            if (mw > fieldWidth || mh > fieldHeight)
+            {
+                mainField = null;
+                subField = null;
+                fieldWidth = mw;
+                fieldHeight = mh;
+            }
+
+
+            // initializes 2 big arrays
+            mainField = new double[fieldWidth, fieldHeight];
+            subField = new double[fieldWidth, fieldHeight];
+            visitedField = new bool[fieldWidth, fieldHeight];
+
+            for (int i = 0; i < fieldWidth; i++)
+            {
+                for (int j = 0; j < fieldHeight; j++)
+                {
+                    mainField[i, j] = 0.0;
+                    subField[i, j] = 0.0;
+                    visitedField[i, j] = false;
+                }
+            }
+
+
             hRanges = new List<MatrixRange>();
             vRanges = new List<MatrixRange>();
         }
 
-        public void InsertDivider(List<MatrixRange> ranges, int x)
+        /// <summary>
+        /// Modifies main field array with new object
+        /// For main field:
+        /// Adds new potentials to all nodes according the position of object
+        /// For sub field:
+        /// Sets new potentials to the nodes.
+        /// </summary>
+        /// <param name="pt"></param>
+        public void InsertPeak(Point pt, bool bMain)
         {
-            if (ranges.Count == 0)
-            {
-                ranges.Add(new MatrixRange());
-            }
+            Point sp = ConvertCoordinatesViewToMatrix(pt);
+            double baseValue = mainField[sp.X,sp.Y];
 
-            for (int i = 0; i < ranges.Count; i++)
+            for (int i = 0; i < fieldWidth; i++)
             {
-                MatrixRange mr = ranges[i];
-                if (mr.from == x || mr.end == x)
-                    return;
-                if (mr.from < x && mr.end > x)
+                for (int j = 0; j < fieldHeight; j++)
                 {
-                    MatrixRange newr = new MatrixRange();
-                    newr.from = mr.from;
-                    newr.end = x;
-                    mr.from = x;
-                    ranges.Insert(i, newr);
-                    break;
-                }
-            }
-        }
+                    double d = getDistance(i, j, sp.X, sp.Y);
+                    double pw = Math.Pow(Math.E, -d/50);
 
-        public void InsertHorizontalDivider(int x)
-        {
-            InsertDivider(hRanges, x);
-        }
-
-        public void InsertVerticalDivider(int x)
-        {
-            InsertDivider(vRanges, x);
-        }
-
-        public void CreateMatrix()
-        {
-            aMatrixRows = vRanges.Count;
-            aMatrixCols = hRanges.Count;
-            aMatrix = new MatrixArea[aMatrixCols, aMatrixRows];
-
-            for (int c = 0; c < aMatrixCols; c++)
-            {
-                for (int r = 0; r < aMatrixRows; r++)
-                {
-                    aMatrix[c, r] = new MatrixArea();
-                    aMatrix[c, r].column = c;
-                    aMatrix[c, r].row = r;
-                    aMatrix[c, r].prevArea = new List<MatrixArea>();
-                    aMatrix[c, r].pathDistance = -1;
-                }
-            }
-        }
-
-        public void GetIndicesForRange(List<MatrixRange> ranges, int x1, int x2, out int index1, out int index2)
-        {
-            bool started = false;
-            index1 = -1;
-            index2 = -1;
-            for (int i = 0; i < ranges.Count; i++)
-            {
-                MatrixRange mr = ranges[i];
-                if (mr.from >= x1 && mr.end <= x2)
-                {
-                    if (started)
-                    {
-                        index2 = i;
-                    }
+                    if (bMain)
+                        mainField[i, j] += pw;
                     else
-                    {
-                        index1 = i;
-                        index2 = i;
-                        started = true;
-                    }
+                        subField[i, j] = -2 * pw * baseValue;
                 }
-                else
+            }
+
+            int a = 0;
+        }
+
+        public double getDistance(int x1, int y1, int x2, int y2)
+        {
+            return Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+        }
+
+        public Point ConvertCoordinatesViewToMatrix(Point pt)
+        {
+            Point np = new Point();
+            np.X = Convert.ToInt32(Math.Round((pt.X - rectangleOfMatrix.Xa) / Convert.ToDouble(gridStep)));
+            np.Y = Convert.ToInt32(Math.Round((pt.Y - rectangleOfMatrix.Ya) / Convert.ToDouble(gridStep)));
+            return np;
+        }
+
+        public void ClearVisitedField()
+        {
+            for (int i = 0; i < fieldWidth; i++)
+            {
+                for (int j = 0; j < fieldHeight; j++)
                 {
-                    if (started)
-                        break;
+                    visitedField[i, j] = false;
                 }
             }
         }
 
-        public void StartMatrixPaths(List<PathFinderRecord> list, int startShapeId)
+        static int[] checkOffsX = { -1, 0, 1, 1, 1, 0, -1, -1 };
+        static int[] checkOffsY = { -1, -1, -1, 0, 1, 1, 1, 0 };
+
+        public bool IsValidMatrixPoint(Point p)
         {
-            list.Clear();
-            for (int c = 0; c < aMatrixCols; c++)
-            {
-                for (int r = 0; r < aMatrixRows; r++)
-                {
-                    MatrixArea ma = aMatrix[c, r];
-                    ma.prevArea.Clear();
-                    ma.pathDistance = -1;
-                    if (ma != null && ma.shape != null && ma.shape.id == startShapeId)
-                    {
-                        list.Add(new PathFinderRecord(c, r));
-                        ma.pathDistance = 0;
-                    }
-                }
-            }
+            if (p.X < 0 || p.X >= fieldWidth)
+                return false;
+            if (p.Y < 0 || p.Y >= fieldHeight)
+                return false;
+            return true;
         }
 
-        public void AddMatrixPath(List<PathFinderRecord> list, MatrixArea nexta)
+        public bool MoveToNextPoint(ref Point current, ref Point target)
         {
-            PathFinderRecord newrec = new PathFinderRecord();
-            newrec.column = nexta.column;
-            newrec.row = nexta.row;
-            bool pfrfound = false;
-            foreach (PathFinderRecord pfr in list)
+            int foundIndex = -1;
+            Point tries = new Point();
+            double foundMinimum = 1000.0;
+            double value = 0.0;
+
+            for (int i = 0; i < 8; i++)
             {
-                if (pfr.column == newrec.column && pfr.row == newrec.row)
+                tries.X = current.X + checkOffsX[i];
+                tries.Y = current.Y + checkOffsY[i];
+                if (!IsValidMatrixPoint(tries))
+                    continue;
+                value = mainField[tries.X, tries.Y] + subField[tries.X, tries.Y];
+                if (foundMinimum > value)
                 {
-                    pfrfound = true;
+                    foundIndex = i;
+                    foundMinimum = value;
                 }
             }
-            if (!pfrfound)
-                list.Add(newrec);
-        }
 
-        public DiagramPath FindPath(int startId, int endId)
-        {
-            List<PathFinderRecord> list = new List<PathFinderRecord>();
-            float targetDistance = 100000;
-            int[,] steps = new int[4, 4] {
-                    {-1, 0, 4, 2},
-                    {0, -1, 1, 3},
-                    {0,  1, 3, 1},
-                    { 1, 0, 2, 4}
-                };
-
-
-            StartMatrixPaths(list, startId);
-
-            while (list.Count > 0)
+            // if nothing was found or that one found was already visited, then find direct
+            // way to the target
+            if (foundIndex < 0 || visitedField[current.X + checkOffsX[foundIndex], current.Y + checkOffsY[foundIndex]] == true)
             {
-                float newDistance = 0;
-                PathFinderRecord rec = list[0];
-                list.RemoveAt(0);
+                double minDist = 1000.0;
 
-                //Debugger.Log(0, "", "## Processing area " + rec.column + "," + rec.row + "\n");
-
-                MatrixArea ma = aMatrix[rec.column, rec.row];
-                MatrixArea nexta;
-
-                // trying progress in 4 directions
-                for (int stepi = 0; stepi < 4; stepi++)
+                for (int i = 0; i < 8; i++)
                 {
-                    float width = 0;
-                    int newcol = rec.column + steps[stepi, 0];
-                    int newrow = rec.row + steps[stepi, 1];
-                    if (newcol >= 0 && newcol < aMatrixCols && newrow >= 0 && newrow < aMatrixRows)
+                    tries.X = current.X + checkOffsX[i];
+                    tries.Y = current.Y + checkOffsY[i];
+                    if (!IsValidMatrixPoint(tries))
+                        continue;
+                    double d = getDistance(tries.X, tries.Y, target.X, target.Y);
+                    if (d < minDist)
                     {
-                        //Debugger.Log(0, "", "  ## trying " + newcol + "," + newrow + "\n");
-                        //LogPathCount(1);
-                        nexta = aMatrix[newcol, newrow];
-                        if (nexta.ShapeId == endId && ma.ShapeId == startId)
-                            continue;
-                        newDistance = ma.pathDistance + 1;
-                        if (steps[stepi, 2] == 2 || steps[stepi, 2] == 4)
-                            width = vRanges[newrow].Width;
-                        else
-                            width = hRanges[newcol].Width;
-                        if (width < 12) newDistance++;
-                        if (width < 8) newDistance++;
-                        if (width < 4) newDistance++;
-                        if (newDistance > targetDistance)
-                            continue;
-                        if ((nexta.pathDistance < 0 || nexta.pathDistance >= newDistance) && (nexta.shape == null || (nexta.shape != null && nexta.shape.id == endId)))
-                        {
-                            if (nexta.pathDistance > newDistance)
-                                nexta.prevArea.Clear();
-                            nexta.pathDistance = newDistance;
-                            nexta.prevArea.Add(ma);
-                            if (nexta.shape != null && nexta.shape.id == endId)
-                            {
-                                if (targetDistance > newDistance)
-                                    targetDistance = newDistance;
-                                //Debugger.Log(0, "", "      ## target achieved " + nexta.ToString() + "\n");
-                            }
-                            else
-                            {
-                                AddMatrixPath(list, nexta);
-                            }
-                        }
+                        foundIndex = i;
+                        minDist = 0;
                     }
                 }
             }
 
-            //LogDistances();
+            current.X += checkOffsX[foundIndex];
+            current.Y += checkOffsY[foundIndex];
+            visitedField[current.X, current.Y] = true;
+
+            return ((current.X == target.X) && (current.Y == target.Y));
+        }
+
+        public DiagramPath FindPath(CaseShape ss, CaseShape es)
+        {
+            Point sp = ConvertCoordinatesViewToMatrix(ss.Bounds.CenterPoint);
+            Point ep = ConvertCoordinatesViewToMatrix(es.Bounds.CenterPoint);
+
+            // starts on sp and tries to reach ep
+            // in every step
+            // - gets all surrounding gradients and select the lowest gradient
+            // - if that field was already visited, then tries to select that field around
+            //   current, which is nearest to target field
+            Point current = new Point(sp.X, sp.Y);
+            List<Point> track = new List<Point>();
+            bool finished = false;
+
+            track.Add(sp);
+            finished = MoveToNextPoint(ref current, ref ep);
+            while (!finished)
+            {
+                track.Add(current);
+                finished = MoveToNextPoint(ref current, ref ep);
+            }
+            track.Add(ep);
+
 
             DiagramPath dpath = new DiagramPath();
+            dpath.areaPath = track.ToArray<Point>();
 
-            // creating list of cells of target shape
-            List<MatrixArea> targetCells = new List<MatrixArea>();
-            for (int c = 0; c < aMatrixCols; c++)
-            {
-                for (int r = 0; r < aMatrixRows; r++)
-                {
-                    MatrixArea ma = aMatrix[c, r];
-                    if (ma.shape != null && ma.shape.id == endId && ma.prevArea != null && ma.prevArea.Count > 0)
-                    {
-                        targetCells.Add(ma);
-                    }
-                }
-            }
-
-            // create all paths by recursion
-            List<FoundPath> foundPaths = new List<FoundPath>();
-            foreach (MatrixArea ma in targetCells)
-            {
-                ma.CreatePaths(new FoundPath(ma), foundPaths);
-            }
-
-            // choosing shortest path
-            FoundPath fpa = null;
-            foreach (FoundPath fpath in foundPaths)
-            {
-                if (fpa == null || fpa.Distance > fpath.Distance)
-                {
-                    fpa = fpath;
-                }
-            }
-
-            if (fpa != null)
-            {
-                // creating points from path
-                Point[] points = new Point[fpa.path.Count];
-                for (int j = 0; j < fpa.path.Count; j++)
-                {
-                    points[j] = new Point(fpa.path[j].column, fpa.path[j].row);
-                }
-                dpath.areaPath = points;
-            }
-            else
-            {
-                dpath.areaPath = new Point[]{};
-            }
                 
             return dpath;
-
-        }
-
-        public void ClearSlots()
-        {
-            for (int c = 0; c < aMatrixCols; c++)
-            {
-                for (int r = 0; r < aMatrixRows; r++)
-                {
-                    MatrixArea ma = aMatrix[c, r];
-                    ma.ClearSlots();
-                }
-            }
-        }
-
-        public void AllocateSlots(Point[] points, CaseDiagramConnection conn)
-        {
-            if (points == null || points.Length < 2)
-                return;
-            int idx = 0;
-            int next = 0;
-            Point curr = points[idx];
-            Point nextp;
-            bool vert = false;
-
-            while(idx < points.Length - 1)
-            {
-                next = EndOfDirection(points, idx);
-                curr = points[idx];
-                nextp = points[next];
-                if (curr.X == nextp.X)
-                    vert = true;
-                else 
-                    vert = false;
-                if (next > idx)
-                {
-                    for (int slot = 0; slot < 100; slot++)
-                    {
-                        bool available = true;
-                        for (int j = idx; j <= next; j++)
-                        {
-                            if (vert)
-                            {
-                                if (!aMatrix[points[j].X, points[j].Y].IsVSlotAvailable(slot))
-                                {
-                                    available = false;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                if (!aMatrix[points[j].X, points[j].Y].IsHSlotAvailable(slot))
-                                {
-                                    available = false;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (available)
-                        {
-                            for (int j = idx; j <= next; j++)
-                            {
-                                if (vert)
-                                {
-                                    aMatrix[points[j].X, points[j].Y].SetVSlot(slot, conn);
-                                }
-                                else
-                                {
-                                    aMatrix[points[j].X, points[j].Y].SetHSlot(slot, conn);
-                                }
-                            }
-                            break;
-                        }
-                    }
-                    idx = next;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
 
         }
 
@@ -566,99 +446,25 @@ namespace MiniCASE
             }
         }
 
-        public void RecalculateSlotsPositions()
-        {
-            for (int c = 0; c < aMatrixCols; c++)
-            {
-                MatrixRange rangec = hRanges[c] as MatrixRange;
-                for (int r = 0; r < aMatrixRows; r++)
-                {
-                    MatrixRange ranger = vRanges[r] as MatrixRange;
-                    MatrixArea ma = aMatrix[c, r];
-                    if (ma.HorizontalSlotAllocatedCount > 0)
-                    {
-                        ma.RecalculateHorizontalSlots(ranger.from, ranger.end);
-                    }
-                    else
-                    {
-                        ma.vCenter = ranger.Center;
-                    }
-
-                    if (ma.VerticalSlotAllocatedCount > 0)
-                    {
-                        ma.RecalculateVerticalSlots(rangec.from, rangec.end);
-                    }
-                    else
-                    {
-                        ma.hCenter = rangec.Center;
-                    }
-                }
-            }
-
-        }
-
-        public void CalculatePoints(CaseDiagramConnection conn)
-        {
-            MatrixArea ma;
-            Point curr;
-            Point[] trace = conn.path.areaPath;
-            Point[] arr = new Point[trace.Length+2];
-            for (int i = 1; i < trace.Length - 1; i++)
-            {
-                curr = trace[i];
-                ma = aMatrix[curr.X,curr.Y];
-                arr[i+1] = ma.GetPointForConnection(conn);
-            }
-
-            curr = trace[0];
-            ma = aMatrix[curr.X, curr.Y];
-            arr[1] = ma.GetAnchorPoint(trace[1], arr[2]);
-            if (ma.shape != null)
-                arr[0] = ma.shape.Bounds.CenterPoint;
-
-            curr = trace[trace.Length - 1];
-            ma = aMatrix[curr.X, curr.Y];
-            arr[trace.Length] = ma.GetAnchorPoint(trace[trace.Length - 2], arr[trace.Length-1]);
-            if (ma.shape != null)
-                arr[trace.Length + 1] = ma.shape.Bounds.CenterPoint;
-
-            conn.coordinates = arr;
-            conn.validCoordinates = true;
-        }
-
         public int GetColumnForPoint(int x, int y)
         {
-            for (int i = 0; i < hRanges.Count; i++)
-            {
-                MatrixRange range = hRanges[i] as MatrixRange;
-                if (range.from <= x && range.end >= x)
-                    return i;
-            }
-            return -1;
+            return 0;
         }
 
         public int GetRowForPoint(int x, int y)
         {
-            for (int i = 0; i < vRanges.Count; i++)
-            {
-                MatrixRange range = vRanges[i] as MatrixRange;
-                if (range.from <= y && range.end >= y)
-                    return i;
-            }
-            return -1;
+            return 0;
+
         }
 
         public CaseShape GetShapeAtPoint(int x, int y)
         {
-            int column = GetColumnForPoint(x, y);
-            int row = GetRowForPoint(x, y);
-
-            MatrixArea ma = aMatrix[column, row];
-            return ma.shape;
+            return null;
         }
 
         public CaseDiagramConnection GetConnectionAtPoint(int x, int y)
         {
+            return null;
             int column = GetColumnForPoint(x, y);
             int row = GetRowForPoint(x, y);
 
@@ -680,17 +486,6 @@ namespace MiniCASE
 
         public void LogRanges()
         {
-            Debugger.Log(0, "", "Horizontal ranges:\n");
-            foreach (MatrixRange mr in hRanges)
-            {
-                Debugger.Log(0, "", string.Format("Range {0} - {1}\n", mr.from, mr.end));
-            }
-            Debugger.Log(0, "", "Vertical ranges:\n");
-            foreach (MatrixRange mr in vRanges)
-            {
-                Debugger.Log(0, "", string.Format("Range {0} - {1}\n", mr.from, mr.end));
-            }
-            Debugger.Log(0, "", "------------------------------\n");
         }
 
         public void LogAreas()

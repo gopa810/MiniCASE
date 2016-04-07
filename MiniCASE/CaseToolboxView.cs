@@ -33,7 +33,7 @@ namespace MiniCASE
 
             CaseShape cs = listBox1.Items[index] as CaseShape;
 
-            this.DoDragDrop(cs.ShapeType, DragDropEffects.All);
+            this.DoDragDrop(cs.ShapeReference, DragDropEffects.All);
         }
 
         private void CaseToolboxView_MouseUp(object sender, MouseEventArgs e)
@@ -81,7 +81,7 @@ namespace MiniCASE
                 rc.Y = e.Bounds.Y + 4;
                 rc.Width = e.Bounds.Width - 44;
                 rc.Height = e.Bounds.Height - 8;
-                e.Graphics.DrawString(ShapesLibrary.Description(sd.ShapeType), SystemFonts.MenuFont, SystemBrushes.ControlText, rc, stringLeftMiddle);
+                e.Graphics.DrawString(ShapesLibrary.Description(sd.ShapeReference), SystemFonts.MenuFont, SystemBrushes.ControlText, rc, stringLeftMiddle);
             }
         }
 

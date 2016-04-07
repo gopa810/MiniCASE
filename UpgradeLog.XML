@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="MiniCASE">
+</Property><Property Name="Solution File" Value="C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE.sln">
+</Property><Property Name="User Options File" Value="C:\Users\peter.kollath\Documents\GitHub\MiniCASE\MiniCASE.suo">
+</Property><Property Name="Date" Value="Thursday, October 01, 2015">
+</Property><Property Name="Time" Value="9:50 AM">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="MiniCASE.sln" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE.sln">
+</Event><Event ErrorLevel="0" Project="" Source="MiniCASE.suo" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE.suo">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\MiniCASE.csproj" Description="Project file successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\MiniCASE.csproj">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\CaseDiagram.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\CaseDiagram.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\CaseDiagramConnection.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\CaseDiagramConnection.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\CaseDiagramView.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\CaseDiagramView.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\CaseDiagramView.Designer.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\CaseDiagramView.Designer.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\CaseProject.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\CaseProject.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\CaseShape.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\CaseShape.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\DiagramDrawMatrix.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\DiagramDrawMatrix.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\DiagramPath.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\DiagramPath.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\Geometry.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\Geometry.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\MatrixArea.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\MatrixArea.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\RectangleD.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\RectangleD.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\ShapeDefinition.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\ShapeDefinition.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\ShapesLibrary.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\ShapesLibrary.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseToolboxView.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseToolboxView.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseToolboxView.Designer.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseToolboxView.Designer.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\MainForm.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\MainForm.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\MainForm.Designer.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\MainForm.Designer.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\Program.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\Program.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\Properties\AssemblyInfo.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\Properties\Resources.Designer.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\Properties\Resources.Designer.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\Properties\Settings.Designer.cs" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\Properties\Settings.Designer.cs">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\Properties\Settings.settings" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\Properties\Settings.settings">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseDiagram\CaseDiagramView.resx" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseDiagram\CaseDiagramView.resx">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\CaseToolboxView.resx" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\CaseToolboxView.resx">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\MainForm.resx" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\MainForm.resx">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\Properties\Resources.resx" Description="File successfully backed up as C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Backup\MiniCASE\Properties\Resources.resx">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\MiniCASE.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="MiniCASE" Source="MiniCASE\MiniCASE.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="MiniCASE.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="MiniCASE.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="MiniCASE" Source="MiniCASE\MiniCASE.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>
