@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Xml;
 
 namespace MiniCASE
 {
     public class RectangleD
     {
-        public int Xa = 0;
-        public int Xb = 0;
-        public int Ya = 0;
-        public int Yb = 0;
+        public int Left = 0;
+        public int Right = 0;
+        public int Top = 0;
+        public int Bottom = 0;
 
         public RectangleD()
         {
@@ -19,29 +20,29 @@ namespace MiniCASE
 
         public RectangleD(int left, int top, int right, int bottom)
         {
-            Xa = left;
-            Xb = right;
-            Ya = top;
-            Yb = bottom;
+            Left = left;
+            Right = right;
+            Top = top;
+            Bottom = bottom;
         }
 
         public Point CenterPoint
         {
             get
             {
-                return new Point((Xa + Xb) / 2, (Ya + Yb) / 2);
+                return new Point((Left + Right) / 2, (Top + Bottom) / 2);
             }
             set
             {
-                int cx = (Xa + Xb) / 2;
-                int cy = (Ya + Yb) / 2;
+                int cx = (Left + Right) / 2;
+                int cy = (Top + Bottom) / 2;
                 int width = this.Width/2;
                 int height = this.Height/2;
 
-                Xa = Xa + (value.X - cx);
-                Xb = Xb + (value.X - cx);
-                Yb = Yb + (value.Y - cy);
-                Ya = Ya + (value.Y - cy);
+                Left = Left + (value.X - cx);
+                Right = Right + (value.X - cx);
+                Bottom = Bottom + (value.Y - cy);
+                Top = Top + (value.Y - cy);
             }
         }
 
@@ -49,44 +50,44 @@ namespace MiniCASE
         {
             get
             {
-                return new Rectangle(Math.Min(Xa, Xb), Math.Min(Ya, Yb), Math.Abs(Xa - Xb), Math.Abs(Ya - Yb));
+                return new Rectangle(Math.Min(Left, Right), Math.Min(Top, Bottom), Math.Abs(Left - Right), Math.Abs(Top - Bottom));
             }
             set
             {
-                Xa = value.Left;
-                Ya = value.Top;
-                Xb = value.Right;
-                Yb = value.Bottom;
+                Left = value.Left;
+                Top = value.Top;
+                Right = value.Right;
+                Bottom = value.Bottom;
             }
         }
 
         public void Merge(RectangleD rect)
         {
-            Xa = Math.Min(Xa, rect.Xa);
-            Ya = Math.Min(Ya, rect.Ya);
-            Xb = Math.Max(Xb, rect.Xb);
-            Yb = Math.Max(Yb, rect.Yb);
+            Left = Math.Min(Left, rect.Left);
+            Top = Math.Min(Top, rect.Top);
+            Right = Math.Max(Right, rect.Right);
+            Bottom = Math.Max(Bottom, rect.Bottom);
         }
 
         public void Set(RectangleD rect)
         {
-            Xa = rect.Xa;
-            Xb = rect.Xb;
-            Ya = rect.Ya;
-            Yb = rect.Yb;
+            Left = rect.Left;
+            Right = rect.Right;
+            Top = rect.Top;
+            Bottom = rect.Bottom;
         }
 
         public int Width
         {
             get
             {
-                return Math.Abs(Xa - Xb);
+                return Math.Abs(Left - Right);
             }
             set
             {
-                int currentWidth = Math.Abs(Xa - Xb);
-                Xa = Xa - (value - currentWidth)/2;
-                Xb = Xa + value;
+                int currentWidth = Math.Abs(Left - Right);
+                Left = Left - (value - currentWidth)/2;
+                Right = Left + value;
             }
         }
 
@@ -94,19 +95,93 @@ namespace MiniCASE
         {
             get
             {
-                return Math.Abs(Ya - Yb);
+                return Math.Abs(Top - Bottom);
             }
             set
             {
-                int currentHeight = Math.Abs(Ya - Yb);
-                Ya = Ya - (value - currentHeight) / 2;
-                Yb = Ya + value;
+                int currentHeight = Math.Abs(Top - Bottom);
+                Top = Top - (value - currentHeight) / 2;
+                Bottom = Top + value;
             }
         }
 
         public bool ContainsPoint(int px, int py)
         {
-            return ((Xa <= px) && (Xb >= px) && (Ya <= py) && (Yb >= py)) ;
+            return ((Left <= px) && (Right >= px) && (Top <= py) && (Bottom >= py)) ;
         }
+
+        public bool IntersectsWith(RectangleD rd)
+        {
+            return ((Left <= rd.Right) && (Right >= rd.Left) && (Top <= rd.Bottom) && (Bottom >= rd.Top));
+        }
+
+        public Point GetRelativePoint(Point point)
+        {
+            if (Right == Left || Top == Bottom)
+                return Point.Empty;
+            return new Point(100*(point.X - Left) / (Right - Left), 100 * (point.Y - Top) / (Bottom - Top) );
+        }
+
+        public Point GetLogicalPoint(Point point)
+        {
+            return new Point(point.X * Width / 100 + Left, point.Y * Height / 100 + Top);
+        }
+
+        public Point TopLeft
+        {
+            get { return new Point(Left, Top); }
+        }
+        public Point TopRight
+        {
+            get { return new Point(Right, Top); }
+        }
+        public Point BottomLeft
+        {
+            get { return new Point(Left, Bottom); }
+        }
+        public Point BottomRight
+        {
+            get { return new Point(Right, Bottom); }
+        }
+        public Point TopCenter
+        {
+            get { return new Point((Left + Right)/2, Top); }
+        }
+        public Point CenterRight
+        {
+            get { return new Point(Right, (Top + Bottom)/2); }
+        }
+        public Point BottomCenter
+        {
+            get { return new Point((Left + Right)/2, Bottom); }
+        }
+        public Point CenterLeft
+        {
+            get { return new Point(Left, (Top + Bottom)/2); }
+        }
+
+        public void Save(XmlElement elem)
+        {
+            elem.SetAttribute("Top", Top.ToString());
+            elem.SetAttribute("Right", Right.ToString());
+            elem.SetAttribute("Bottom", Bottom.ToString());
+            elem.SetAttribute("Left", Left.ToString());
+        }
+
+        public void Load(XmlElement elem)
+        {
+            if (elem.HasAttribute("Top"))
+                Top = int.Parse(elem.GetAttribute("Top"));
+            if (elem.HasAttribute("Bottom"))
+                Bottom = int.Parse(elem.GetAttribute("Bottom"));
+            if (elem.HasAttribute("Left"))
+                Left = int.Parse(elem.GetAttribute("Left"));
+            if (elem.HasAttribute("Right"))
+                Right = int.Parse(elem.GetAttribute("Right"));
+        }
+
+
+
+
     }
 }

@@ -38,7 +38,6 @@ namespace ConvWin
         public string CFormat(string format)
         {
             int mode = 0;
-            int len = 0;
             int c = 0;
             StringBuilder tag = new StringBuilder();
             StringBuilder sb = new StringBuilder();

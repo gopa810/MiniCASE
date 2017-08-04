@@ -6,3 +6,12 @@ C:\Users\peter.kollath\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.P
 C:\Users\peter.kollath\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.csproj.GenerateResource.Cache
 C:\Users\peter.kollath\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.exe
 C:\Users\peter.kollath\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.pdb
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\ConvWin\bin\Debug\ConvWin.exe
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\ConvWin\bin\Debug\ConvWin.pdb
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.csprojResolveAssemblyReference.cache
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.Form1.resources
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.Form2.resources
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.Properties.Resources.resources
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.csproj.GenerateResource.Cache
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.exe
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\ConvWin\obj\x86\Debug\ConvWin.pdb

@@ -2,3 +2,8 @@ C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Conv\bin\Debug\Conv.dll
 C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Conv\bin\Debug\Conv.pdb
 C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Conv\obj\Debug\Conv.dll
 C:\Users\peter.kollath\Documents\GitHub\MiniCASE\Conv\obj\Debug\Conv.pdb
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\Conv\bin\Debug\Conv.dll
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\Conv\bin\Debug\Conv.pdb
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\Conv\obj\Debug\Conv.csprojResolveAssemblyReference.cache
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\Conv\obj\Debug\Conv.dll
+C:\Users\Gopa702\Documents\GitHub\MiniCASE\Conv\obj\Debug\Conv.pdb

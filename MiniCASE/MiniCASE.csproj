@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,13 +10,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MiniCASE</RootNamespace>
     <AssemblyName>MiniCASE</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,6 +36,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -53,29 +56,104 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CaseDiagram\CaseDiagram.cs" />
-    <Compile Include="CaseDiagram\CaseDiagramConnection.cs" />
-    <Compile Include="CaseDiagram\CaseDiagramView.cs">
+    <Compile Include="CaseDiagram\CDDiagram.cs" />
+    <Compile Include="CaseDiagram\CDConnection.cs" />
+    <Compile Include="CaseDiagramView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CaseDiagram\CaseDiagramView.Designer.cs">
+    <Compile Include="CaseDiagramView.Designer.cs">
       <DependentUpon>CaseDiagramView.cs</DependentUpon>
     </Compile>
-    <Compile Include="CaseDiagram\CaseProject.cs" />
-    <Compile Include="CaseDiagram\CaseShape.cs" />
-    <Compile Include="CaseDiagram\DiagramDrawMatrix.cs" />
-    <Compile Include="CaseDiagram\DiagramPath.cs" />
-    <Compile Include="CaseDiagram\Geometry.cs" />
-    <Compile Include="CaseDiagram\MatrixArea.cs" />
+    <Compile Include="CaseDiagram\CDGraphics.cs" />
+    <Compile Include="CaseDiagram\Triangle.cs" />
+    <Compile Include="Definitions\CDDocumentDefinition.cs" />
+    <Compile Include="Definitions\CDObjectDefinition.cs" />
+    <Compile Include="CaseDiagram\CDProject.cs" />
+    <Compile Include="CaseDiagram\CDReaderReferences.cs" />
+    <Compile Include="CaseDiagram\CDShape.cs" />
+    <Compile Include="CaseDiagram\CDContext.cs" />
+    <Compile Include="Definitions\CDInstruction.cs" />
+    <Compile Include="CaseDiagram\CIKey.cs" />
+    <Compile Include="Definitions\CDXml.cs" />
+    <Compile Include="Definitions\CSParameterDef.cs" />
+    <Compile Include="CaseDiagram\CSTextAlign.cs" />
+    <Compile Include="CaseDiagram\CSTextPadding.cs" />
+    <Compile Include="CaseDiagram\CDObject.cs" />
     <Compile Include="CaseDiagram\RectangleD.cs" />
-    <Compile Include="CaseDiagram\ShapeDefinition.cs" />
-    <Compile Include="CaseDiagram\ShapesLibrary.cs" />
+    <Compile Include="Definitions\CDShapeDefinition.cs" />
+    <Compile Include="CaseDiagram\CDLibrary.cs" />
     <Compile Include="CaseToolboxView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CaseToolboxView.Designer.cs">
       <DependentUpon>CaseToolboxView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Definitions\CDConnectionDefinition.cs" />
+    <Compile Include="Definitions\CDEndingDefinition.cs" />
+    <Compile Include="Definitions\CSParameterSource.cs" />
+    <Compile Include="DialogEditProjectProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DialogEditProjectProperties.Designer.cs">
+      <DependentUpon>DialogEditProjectProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DialogFindDiagram.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DialogFindDiagram.Designer.cs">
+      <DependentUpon>DialogFindDiagram.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DialogSelectDocumentType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DialogSelectDocumentType.Designer.cs">
+      <DependentUpon>DialogSelectDocumentType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MiniCaseApp.cs" />
+    <Compile Include="CaseDiagram\CDProjectBase.cs" />
+    <Compile Include="PanelDiagramEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PanelDiagramEdit.Designer.cs">
+      <DependentUpon>PanelDiagramEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PanelIntro.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PanelIntro.Designer.cs">
+      <DependentUpon>PanelIntro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyControls\EVTextAlignEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PropertyControls\EVTextAlignEdit.Designer.cs">
+      <DependentUpon>EVTextAlignEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyControls\EVTextPaddingEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PropertyControls\EVTextPaddingEdit.Designer.cs">
+      <DependentUpon>EVTextPaddingEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyControls\EVComboValue.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PropertyControls\EVComboValue.Designer.cs">
+      <DependentUpon>EVComboValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyControls\EVColorEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PropertyControls\EVColorEdit.Designer.cs">
+      <DependentUpon>EVColorEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyControls\EVContainer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PropertyControls\EVContainer.Designer.cs">
+      <DependentUpon>EVContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyControls\EVStorage.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,11 +162,47 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="CaseDiagram\CaseDiagramView.resx">
+    <Compile Include="PropertyControls\EVStringEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PropertyControls\EVStringEdit.Designer.cs">
+      <DependentUpon>EVStringEdit.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="CaseDiagramView.resx">
       <DependentUpon>CaseDiagramView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CaseToolboxView.resx">
       <DependentUpon>CaseToolboxView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DialogEditProjectProperties.resx">
+      <DependentUpon>DialogEditProjectProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DialogFindDiagram.resx">
+      <DependentUpon>DialogFindDiagram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DialogSelectDocumentType.resx">
+      <DependentUpon>DialogSelectDocumentType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelDiagramEdit.resx">
+      <DependentUpon>PanelDiagramEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PanelIntro.resx">
+      <DependentUpon>PanelIntro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyControls\EVTextAlignEdit.resx">
+      <DependentUpon>EVTextAlignEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyControls\EVTextPaddingEdit.resx">
+      <DependentUpon>EVTextPaddingEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyControls\EVColorEdit.resx">
+      <DependentUpon>EVColorEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyControls\EVComboValue.resx">
+      <DependentUpon>EVComboValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertyControls\EVContainer.resx">
+      <DependentUpon>EVContainer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -103,6 +217,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="PropertyControls\EVStringEdit.resx">
+      <DependentUpon>EVStringEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -112,6 +230,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CDConnection.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CDResize.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

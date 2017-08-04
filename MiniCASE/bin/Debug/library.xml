@@ -1,0 +1,228 @@
+<library>
+  <document name="General Diagram" description="" guid="4feadaf0-007b-413d-8272-f853db9f53ff" RepresentativeShapeName="%Represent">
+    <parameterDefinition name="Text" type="String">
+      <value>diagram</value>
+    </parameterDefinition>
+    <parameterDefinition name="Background" type="Color">
+      <value>White</value>
+    </parameterDefinition>
+    <shape name="%Represent" description="Representative shape" guid="03582e57-7c1d-4a03-97f0-0151e2794b5c">
+      <parameterDefinition name="Text" type="String" />
+      <parameterDefinition name="ParentGroup" type="String">
+        <value>
+        </value>
+      </parameterDefinition>
+      <parameterDefinition name="Background" type="Color">
+        <value>LightCyan</value>
+      </parameterDefinition>
+      <parameterDefinition name="BackgroundTitle" type="Color">
+        <value>SteelBlue</value>
+      </parameterDefinition>
+      <parameterDefinition name="LineColor" type="Color">
+        <value>Black</value>
+      </parameterDefinition>
+      <parameterDefinition name="TextColor" type="Color">
+        <value>Black</value>
+      </parameterDefinition>
+      <shape shapeBase="Rectangle" isContainer="True" userVisible="False" autoBounds="False">
+        <defaultSize width="100" height="60" />
+        <instr Command="FillRectangle">
+          <arg Key="RelativeRect" Rectangle="0|20|100|80" />
+          <arg Key="ColorId" String="Background" />
+        </instr>
+        <instr Command="FillRectangle">
+          <arg Key="RelativeRect" Rectangle="0|0|100|20" />
+          <arg Key="ColorId" String="BackgroundTitle" />
+        </instr>
+        <instr Command="FillTriangle">
+          <arg Key="RelativeTriangle" Triangle="100|80|100|100|80|100" />
+          <arg Key="ColorId" String="BackgroundTitle" />
+        </instr>
+        <instr Command="DrawRectangle">
+          <arg Key="RelativeRect" Rectangle="0|0|100|100" />
+          <arg Key="ColorId" String="LineColor" />
+          <arg Key="Width" Float="2" />
+        </instr>
+        <instr Command="DrawText">
+          <arg Key="RelativeRect" Rectangle="5|25|90|70" />
+          <arg Key="TextId" String="Text" />
+          <arg Key="ColorId" String="TextColor" />
+        </instr>
+      </shape>
+    </shape>
+    <shape name="Shape.Process" description="Process entity" guid="1bfe7487-9500-47b3-ac85-43df10dfc05e">
+      <parameterDefinition name="Text" type="String">
+        <value>
+        </value>
+      </parameterDefinition>
+      <parameterDefinition name="ParentGroup" type="String">
+        <value>
+        </value>
+      </parameterDefinition>
+      <parameterDefinition name="Background" type="Color">
+        <value>White</value>
+      </parameterDefinition>
+      <parameterDefinition name="BackgroundTitle" type="Color">
+        <value>Gray</value>
+      </parameterDefinition>
+      <parameterDefinition name="LineColor" type="Color">
+        <value>Black</value>
+      </parameterDefinition>
+      <parameterDefinition name="TextColor" type="Color">
+        <value>Black</value>
+      </parameterDefinition>
+      <shape shapeBase="Rectangle" isContainer="True" userVisible="True" autoBounds="False">
+        <defaultSize width="100" height="60" />
+        <instr Command="FillRectangle">
+          <arg Key="RelativeRect" Rectangle="0|20|100|80" />
+          <arg Key="ColorId" String="Background" />
+        </instr>
+        <instr Command="FillRectangle">
+          <arg Key="RelativeRect" Rectangle="0|0|100|20" />
+          <arg Key="ColorId" String="BackgroundTitle" />
+        </instr>
+        <instr Command="DrawRectangle">
+          <arg Key="RelativeRect" Rectangle="0|0|100|100" />
+          <arg Key="ColorId" String="LineColor" />
+          <arg Key="Width" Float="1" />
+        </instr>
+        <instr Command="DrawText">
+          <arg Key="RelativeRect" Rectangle="5|25|90|70" />
+          <arg Key="TextId" String="Text" />
+          <arg Key="ColorId" String="TextColor" />
+        </instr>
+      </shape>
+    </shape>
+    <shape name="Shape.Rect" description="Rectangular general shape" guid="7bf1094a-7a34-42de-aad4-5c79d183af69">
+      <parameterDefinition name="Text" type="String">
+        <value>
+        </value>
+      </parameterDefinition>
+      <parameterDefinition name="ParentGroup" type="String">
+        <value>
+        </value>
+      </parameterDefinition>
+      <parameterDefinition name="Background" type="Color">
+        <value>White</value>
+      </parameterDefinition>
+      <parameterDefinition name="LineColor" type="Color">
+        <value>Black</value>
+      </parameterDefinition>
+      <parameterDefinition name="TextColor" type="Color">
+        <value>Black</value>
+      </parameterDefinition>
+      <parameterDefinition name="LineWidth" type="LineWidth">
+        <value>1</value>
+      </parameterDefinition>
+      <parameterDefinition name="FontSize" type="FontSize">
+        <value>12</value>
+      </parameterDefinition>
+      <parameterDefinition name="TextAlign" type="TextAlign">
+        <value>Center</value>
+      </parameterDefinition>
+      <shape shapeBase="Rectangle" isContainer="True" userVisible="True" autoBounds="False">
+        <defaultSize width="100" height="60" />
+        <instr Command="FillRectangle">
+          <arg Key="RelativeRect" Rectangle="0|0|100|100" />
+          <arg Key="ColorId" String="Background" />
+        </instr>
+        <instr Command="DrawRectangle">
+          <arg Key="RelativeRect" Rectangle="0|0|100|100" />
+          <arg Key="ColorId" String="LineColor" />
+          <arg Key="WidthId" String="LineWidth" />
+        </instr>
+        <instr Command="DrawText">
+          <arg Key="RelativePoint" Point="50|50" />
+          <arg Key="TextId" String="Text" />
+          <arg Key="ColorId" String="TextColor" />
+          <arg Key="FontSizeId" String="FontSize" />
+          <arg Key="TextAlignId" String="TextAlign" />
+        </instr>
+      </shape>
+    </shape>
+    <shape name="Shape.Circle" description="Circular general shape" guid="9a79ba70-97c6-45a3-8867-6830f509762d">
+      <parameterDefinition name="Text" type="String">
+        <value>
+        </value>
+      </parameterDefinition>
+      <parameterDefinition name="ParentGroup" type="String">
+        <value>
+        </value>
+      </parameterDefinition>
+      <parameterDefinition name="Background" type="Color">
+        <value>White</value>
+      </parameterDefinition>
+      <parameterDefinition name="LineColor" type="Color">
+        <value>Black</value>
+      </parameterDefinition>
+      <parameterDefinition name="TextColor" type="Color">
+        <value>Black</value>
+      </parameterDefinition>
+      <parameterDefinition name="LineWidth" type="LineWidth">
+        <value>1</value>
+      </parameterDefinition>
+      <parameterDefinition name="FontSize" type="FontSize">
+        <value>12</value>
+      </parameterDefinition>
+      <parameterDefinition name="TextAlign" type="TextAlign">
+        <value>Center</value>
+      </parameterDefinition>
+      <shape shapeBase="Ellipse" isContainer="True" userVisible="True" autoBounds="False">
+        <defaultSize width="100" height="60" />
+        <instr Command="FillEllipse">
+          <arg Key="RelativeRect" Rectangle="0|0|100|100" />
+          <arg Key="ColorId" String="Background" />
+        </instr>
+        <instr Command="DrawEllipse">
+          <arg Key="RelativeRect" Rectangle="0|0|100|100" />
+          <arg Key="ColorId" String="LineColor" />
+          <arg Key="WidthId" String="LineWidth" />
+        </instr>
+        <instr Command="DrawText">
+          <arg Key="RelativePoint" Point="50|50" />
+          <arg Key="TextId" String="Text" />
+          <arg Key="ColorId" String="TextColor" />
+          <arg Key="FontSizeId" String="FontSize" />
+          <arg Key="TextAlignId" String="TextAlign" />
+        </instr>
+      </shape>
+    </shape>
+    <connection name="Default" description="" guid="e28d4708-5140-40b0-b2c3-bb037293d2ad">
+      <parameterDefinition name="Text" type="String">
+        <value>
+        </value>
+      </parameterDefinition>
+      <parameterDefinition name="StartNote" type="String">
+        <value>
+        </value>
+      </parameterDefinition>
+      <parameterDefinition name="EndNote" type="String">
+        <value>
+        </value>
+      </parameterDefinition>
+      <parameterDefinition name="LineColor" type="Color">
+        <value>Black</value>
+      </parameterDefinition>
+      <parameterDefinition name="LineWidth" type="LineWidth">
+        <value>1</value>
+      </parameterDefinition>
+      <parameterDefinition name="StartCap" type="LineCap">
+        <value>5da64694-ac05-4868-9ce1-1fc269eda6ce</value>
+      </parameterDefinition>
+      <parameterDefinition name="EndCap" type="LineCap">
+        <value>4d18d5c3-437b-4e9b-821d-870d57013515</value>
+      </parameterDefinition>
+      <parameterDefinition name="LinePattern" type="LinePattern">
+        <value>Solid</value>
+      </parameterDefinition>
+      <parameterDefinition name="PathStyle" type="LinePath">
+        <value>Straight</value>
+      </parameterDefinition>
+    </connection>
+    <lineend name="Default Plain" description="" guid="5da64694-ac05-4868-9ce1-1fc269eda6ce" />
+    <lineend name="Default Arrow" description="" guid="4d18d5c3-437b-4e9b-821d-870d57013515">
+      <instr cmd="DrawLine" color="" bx="0.3" by="0.1" />
+      <instr cmd="DrawLine" color="" bx="0.3" by="-0.1" />
+    </lineend>
+  </document>
+</library>
